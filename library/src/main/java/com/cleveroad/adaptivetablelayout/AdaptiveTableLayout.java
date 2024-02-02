@@ -10,11 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.util.SparseArrayCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +21,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.collection.SparseArrayCompat;
+import androidx.core.view.ViewCompat;
 
 public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.ScrollHelperListener, AdaptiveTableDataSetObserver {
 
@@ -104,7 +105,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     /**
      * Helps work with row' or column' shadows.
      */
-    private ShadowHelper mShadowHelper;
+//    private ShadowHelper mShadowHelper;
 
     private int mLayoutDirection = ViewCompat.getLayoutDirection(this);
 
@@ -152,7 +153,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         super.setLayoutDirection(layoutDirection);
         mLayoutDirection = layoutDirection;
         mLayoutDirectionHelper.setLayoutDirection(mLayoutDirection);
-        mShadowHelper.onLayoutDirectionChanged();
+//        mShadowHelper.onLayoutDirectionChanged();
     }
 
     @Override
@@ -200,7 +201,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         mSettings = new AdaptiveTableLayoutSettings();
         mScrollHelper = new ScrollHelper(context);
         mScrollHelper.setListener(this);
-        mShadowHelper = new ShadowHelper(mLayoutDirectionHelper);
+//        mShadowHelper = new ShadowHelper(mLayoutDirectionHelper);
     }
 
     @Override
@@ -562,8 +563,8 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         }
 
         if (holder.isDragging()) {
-            View leftShadow = mShadowHelper.getLeftShadow();
-            View rightShadow = mShadowHelper.getRightShadow();
+            View leftShadow = null;//mShadowHelper.getLeftShadow();
+            View rightShadow = null;//mShadowHelper.getRightShadow();
 
             if (leftShadow != null) {
                 int shadowLeft = left - mState.getScrollX();
@@ -601,20 +602,20 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         }
 
         if (!mState.isColumnDragging()) {
-            View shadow = mShadowHelper.getColumnsHeadersShadow();
+//            View shadow = mShadowHelper.getColumnsHeadersShadow();
 
-            if (shadow == null) {
-                shadow = mShadowHelper.addColumnsHeadersShadow(this);
-            }
+//            if (shadow == null) {
+//                shadow = mShadowHelper.addColumnsHeadersShadow(this);
+//            }
 
             //noinspection ResourceType
-            shadow.layout(mState.isRowDragging() ? 0 :
-                            mSettings.isHeaderFixed() ? 0 : -mState.getScrollX(),
-                    top + mManager.getHeaderColumnHeight(),
-                    mSettings.getLayoutWidth(),
-                    top + mManager.getHeaderColumnHeight() + SHADOW_HEADERS_THICK);
-
-            shadow.bringToFront();
+//            shadow.layout(mState.isRowDragging() ? 0 :
+//                            mSettings.isHeaderFixed() ? 0 : -mState.getScrollX(),
+//                    top + mManager.getHeaderColumnHeight(),
+//                    mSettings.getLayoutWidth(),
+//                    top + mManager.getHeaderColumnHeight() + SHADOW_HEADERS_THICK);
+//
+//            shadow.bringToFront();
         }
 
     }
@@ -635,35 +636,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         int leftMargin = holder.getColumnIndex() * mSettings.getCellMargin() + mSettings.getCellMargin();
         int topMargin = holder.getRowIndex() * mSettings.getCellMargin() + mSettings.getCellMargin();
 
-        if (holder.isDragging() && mDragAndDropPoints.getOffset().y > 0) {
-            top = mState.getScrollY() + mDragAndDropPoints.getOffset().y - view.getHeight() / 2;
-            view.bringToFront();
-        }
-        if (holder.isDragging()) {
-            View topShadow = mShadowHelper.getTopShadow();
-            View bottomShadow = mShadowHelper.getBottomShadow();
-
-            if (topShadow != null) {
-                int shadowTop = top - mState.getScrollY();
-                topShadow.layout(0,
-                        Math.max(mManager.getHeaderColumnHeight() - mState.getScrollY(), shadowTop - SHADOW_THICK) + topMargin,
-                        mSettings.getLayoutWidth(),
-                        shadowTop + topMargin);
-                topShadow.bringToFront();
-            }
-
-            if (bottomShadow != null) {
-                int shadowBottom = top - mState.getScrollY() + mManager.getRowHeight(holder.getRowIndex());
-                bottomShadow.layout(
-                        0,
-                        Math.max(mManager.getHeaderColumnHeight() - mState.getScrollY(), shadowBottom) + topMargin,
-                        mSettings.getLayoutWidth(),
-                        shadowBottom + SHADOW_THICK + topMargin);
-
-                bottomShadow.bringToFront();
-            }
-        }
-
         //noinspection ResourceType
         view.layout(left + leftMargin * (isRTL() ? 0 : 1),
                 top - mState.getScrollY() + topMargin,
@@ -674,25 +646,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             view.bringToFront();
         }
 
-        if (!mState.isRowDragging()) {
-            View shadow = mShadowHelper.getRowsHeadersShadow();
-
-            if (shadow == null) {
-                shadow = mShadowHelper.addRowsHeadersShadow(this);
-            }
-
-            int shadowStart, shadowEnd;
-            shadowStart = !isRTL() ? view.getRight() : view.getLeft() - SHADOW_HEADERS_THICK;
-            shadowEnd = shadowStart + SHADOW_HEADERS_THICK;
-
-            shadow.layout(shadowStart,
-                    mState.isColumnDragging() ? 0 :
-                            mSettings.isHeaderFixed() ? 0 : -mState.getScrollY(),
-                    shadowEnd,
-                    mSettings.getLayoutHeight());
-
-            shadow.bringToFront();
-        }
     }
 
     /**
@@ -820,6 +773,15 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         }
 
         removeKeys(headerKeysToRemove, mHeaderRowViewHolders);
+
+        //top left header view holder
+        if (mLeftTopViewHolder != null) {
+            // recycle view holder
+            if (isRecycleAll) {
+                recycleViewHolder(mLeftTopViewHolder);
+                mLeftTopViewHolder = null;
+            }
+        }
     }
 
 
@@ -867,31 +829,36 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         int topRow = mManager.getRowByYWithShift(filledArea.top, mSettings.getCellMargin());
         int bottomRow = mManager.getRowByYWithShift(filledArea.bottom, mSettings.getCellMargin());
 
-        for (int i = topRow; i <= bottomRow; i++) {
-            for (int j = leftColumn; j <= rightColumn; j++) {
-                // item view holders
-                ViewHolder viewHolder = mViewHolders.get(i, j);
-                if (viewHolder == null && mAdapter != null) {
-                    addViewHolder(i, j, ViewHolderType.ITEM);
+        int columnCount = mManager.getColumnCount();
+        if (columnCount > 0) {
+            if (mManager.getRowCount() > 0) {
+                for (int i = topRow; i <= bottomRow; i++) {
+                    for (int j = leftColumn; j <= rightColumn; j++) {
+                        // item view holders
+                        ViewHolder viewHolder = mViewHolders.get(i, j);
+                        if (viewHolder == null && mAdapter != null) {
+                            addViewHolder(i, j, ViewHolderType.ITEM);
+                        }
+                    }
+
+                    // row view headers holders
+                    ViewHolder viewHolder = mHeaderRowViewHolders.get(i);
+                    if (viewHolder == null && mAdapter != null) {
+                        addViewHolder(i, isRTL() ? columnCount : 0, ViewHolderType.ROW_HEADER);
+                    } else if (viewHolder != null && mAdapter != null) {
+                        refreshHeaderRowViewHolder(viewHolder);
+                    }
                 }
             }
 
-            // row view headers holders
-            ViewHolder viewHolder = mHeaderRowViewHolders.get(i);
-            if (viewHolder == null && mAdapter != null) {
-                addViewHolder(i, isRTL() ? mManager.getColumnCount() : 0, ViewHolderType.ROW_HEADER);
-            } else if (viewHolder != null && mAdapter != null) {
-                refreshHeaderRowViewHolder(viewHolder);
-            }
-        }
-
-        for (int i = leftColumn; i <= rightColumn; i++) {
-            // column view header holders
-            ViewHolder viewHolder = mHeaderColumnViewHolders.get(i);
-            if (viewHolder == null && mAdapter != null) {
-                addViewHolder(0, i, ViewHolderType.COLUMN_HEADER);
-            } else if (viewHolder != null && mAdapter != null) {
-                refreshHeaderColumnViewHolder(viewHolder);
+            for (int i = leftColumn; i <= rightColumn; i++) {
+                // column view header holders
+                ViewHolder viewHolder = mHeaderColumnViewHolders.get(i);
+                if (viewHolder == null && mAdapter != null) {
+                    addViewHolder(0, i, ViewHolderType.COLUMN_HEADER);
+                } else if (viewHolder != null && mAdapter != null) {
+                    refreshHeaderColumnViewHolder(viewHolder);
+                }
             }
         }
 
@@ -1420,10 +1387,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 // set dragging flags to column's view holder
                 setDraggingToColumn(viewHolder.getColumnIndex(), true);
 
-                mShadowHelper.removeColumnsHeadersShadow(this);
-
-                mShadowHelper.addLeftShadow(this);
-                mShadowHelper.addRightShadow(this);
 
                 // update view
                 refreshViewHolders();
@@ -1436,10 +1399,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 // set dragging flags to row's view holder
                 setDraggingToRow(viewHolder.getRowIndex(), true);
 
-                mShadowHelper.removeRowsHeadersShadow(this);
-
-                mShadowHelper.addTopShadow(this);
-                mShadowHelper.addBottomShadow(this);
 
                 // update view
                 refreshViewHolders();
@@ -1503,7 +1462,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     public boolean onActionUp(MotionEvent e) {
         if (mState.isDragging()) {
             // remove shadows from dragging views
-            mShadowHelper.removeAllDragAndDropShadows(this);
+//            mShadowHelper.removeAllDragAndDropShadows(this);
 
             // stop smooth scrolling
             if (!mScrollerDragAndDropRunnable.isFinished()) {
@@ -1637,12 +1596,8 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
 
     @Override
     public void notifyDataSetChanged() {
-        recycleViewHolders(true);
-        mVisibleArea.set(mState.getScrollX(),
-                mState.getScrollY(),
-                mState.getScrollX() + mSettings.getLayoutWidth(),
-                mState.getScrollY() + mSettings.getLayoutHeight());
-        addViewHolders(mVisibleArea);
+        initItems();
+        notifyLayoutChanged();
     }
 
     @Override
