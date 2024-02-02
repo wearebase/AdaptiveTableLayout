@@ -9,11 +9,13 @@ android {
         namespace "com.cleveroad.adaptivetablelayout"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 8
-        versionName "8"
+        versionCode 15
+        versionName "1.5"
     }
 }
 
 dependencies {
     implementation "androidx.appcompat:appcompat:1.6.1"
 }
+
+//apply from: 'gradle-mvn-push.gradle'
