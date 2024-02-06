@@ -365,6 +365,18 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 Collections.<Integer, Integer>emptyMap();
     }
 
+    public int getTableScrollX() {
+        return mState.getScrollX();
+    }
+
+    public int getTableScrollY() {
+        return mState.getScrollY();
+    }
+
+    public void resetScroll() {
+        scrollBy(-getTableScrollX(), -getTableScrollY());
+    }
+
     @Override
     public void scrollTo(int x, int y) {
         scrollBy(x, y);
