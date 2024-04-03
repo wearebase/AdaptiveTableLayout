@@ -93,6 +93,7 @@ class AdaptiveTableManager {
      */
     int getColumnWidth(int column) {
         checkForInit();
+        if (mColumnWidths.length >= column) column = mColumnWidths.length - 1;
         return mColumnWidths[column];
     }
 
@@ -138,6 +139,7 @@ class AdaptiveTableManager {
      */
     int getRowHeight(int row) {
         checkForInit();
+        if (mRowHeights.length >= row) row = mRowHeights.length - 1;
         return mRowHeights[row];
     }
 
