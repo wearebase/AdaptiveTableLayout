@@ -36,6 +36,8 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     private static final int SHADOW_THICK = 20;
     private static final int SHADOW_HEADERS_THICK = 10;
 
+    private int extraHeight = 0;
+
     /**
      * Matrix with item view holders
      */
@@ -174,6 +176,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 0, 0);
 
         try {
+            extraHeight = a.getDimensionPixelSize(R.styleable.AdaptiveTableLayout_extraHeight, 0);
             mSettings.setHeaderFixed(a.getBoolean(R.styleable.AdaptiveTableLayout_fixedHeaders, true));
             mSettings.setCellMargin(a.getDimensionPixelSize(R.styleable.AdaptiveTableLayout_cellMargin, 0));
             mSettings.setSolidRowHeader(a.getBoolean(R.styleable.AdaptiveTableLayout_solidRowHeaders, true));
@@ -249,9 +252,8 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             return;
         }
 
-
         // init manager. Not include headers
-        mManager.init(mAdapter.getRowCount() - 1, mAdapter.getColumnCount() - 1);
+        mManager.init(mAdapter.getRowCount() - 1, mAdapter.getColumnCount() - 1, extraHeight);
 
         // calculate widths
         for (int count = mManager.getColumnCount(), i = 0; i < count; i++) {

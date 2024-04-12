@@ -19,6 +19,9 @@ class AdaptiveTableManager {
      * Contains full height (rows heights)
      */
     private long mFullHeight;
+
+    private long mExtraHeight = 0;
+
     /**
      * Array with column's widths
      */
@@ -53,7 +56,7 @@ class AdaptiveTableManager {
         mIsInited = false;
     }
 
-    void init(int rowCount, int columnCount) {
+    void init(int rowCount, int columnCount, int extra) {
         if (rowCount < 0) {
             rowCount = 0;
         }
@@ -61,8 +64,10 @@ class AdaptiveTableManager {
             columnCount = 0;
         }
         // create objects
+        mExtraHeight = extra;
         mRowHeights = new int[rowCount];
         mColumnWidths = new int[columnCount];
+
         mIsInited = true;
     }
 
@@ -194,7 +199,7 @@ class AdaptiveTableManager {
      */
     long getFullHeight() {
         checkForInit();
-        return mFullHeight + mHeaderColumnHeight;
+        return mFullHeight + mHeaderColumnHeight + mExtraHeight;
     }
 
     /**
