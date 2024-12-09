@@ -38,6 +38,10 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
 
     private int extraHeight = 0;
 
+    public void setExtraHeight(int height) {
+        this.extraHeight = height;
+    }
+
     /**
      * Matrix with item view holders
      */
@@ -176,7 +180,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 0, 0);
 
         try {
-            extraHeight = a.getDimensionPixelSize(R.styleable.AdaptiveTableLayout_extraHeight, 0);
+            extraHeight = a.getDimensionPixelSize(R.styleable.AdaptiveTableLayout_extraHeight, extraHeight);
             mSettings.setHeaderFixed(a.getBoolean(R.styleable.AdaptiveTableLayout_fixedHeaders, true));
             mSettings.setCellMargin(a.getDimensionPixelSize(R.styleable.AdaptiveTableLayout_cellMargin, 0));
             mSettings.setSolidRowHeader(a.getBoolean(R.styleable.AdaptiveTableLayout_solidRowHeaders, true));
