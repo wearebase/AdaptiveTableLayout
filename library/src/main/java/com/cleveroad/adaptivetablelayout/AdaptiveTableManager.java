@@ -121,8 +121,11 @@ class AdaptiveTableManager {
     int getColumnsWidth(int from, int to) {
         checkForInit();
         int width = 0;
-        for (int i = from; i < to && mColumnWidths != null; i++) {
-            width += mColumnWidths[i];
+        if (mColumnWidths != null) {
+            int _to = Math.min(to, mColumnWidths.length);
+            for (int i = from; i < _to; i++) {
+                width += mColumnWidths[i];
+            }
         }
         return width;
     }
@@ -169,8 +172,11 @@ class AdaptiveTableManager {
     int getRowsHeight(int from, int to) {
         checkForInit();
         int height = 0;
-        for (int i = from; i < to && mRowHeights != null; i++) {
-            height += mRowHeights[i];
+        if (mRowHeights != null) {
+            int _to = Math.min(to, mRowHeights.length);
+            for (int i = from; i < _to; i++) {
+                height += mRowHeights[i];
+            }
         }
         return height;
     }
